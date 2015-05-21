@@ -26,7 +26,7 @@ int main(int argc, char* argv[]) {
 	}
 	file.close();
 
-	Lexer l(text);
+	Thought::Lexer l(text);
 	// Parser parser(l);
 	l.reset();
 	while(l.has_next()) {

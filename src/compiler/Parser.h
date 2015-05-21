@@ -9,6 +9,7 @@
 #include <map>
 #include <memory>
 
+namespace Thought {
 class Parser
 {
 	Lexer& lex;
@@ -40,6 +41,7 @@ public:
 	Token consume(Token::TokenType);
 	Token consume();
 	Token lookAhead(int distance);
+};
 };
 
 #endif // THOUGHTC_PARSER_H

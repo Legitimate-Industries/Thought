@@ -1,5 +1,6 @@
 #include "Parser.h"
 #include <stdexcept>
+using namespace Thought;
 
 // #include "parslets/Parslets.h"
 // #include "parslets/Precedence.h"

@@ -6,6 +6,7 @@
 #include <vector>
 #include <exception>
 
+namespace Thought {
 struct Token
 {
 	enum TokenType
@@ -79,6 +80,7 @@ struct LexerError : public std::exception
 
 	LexerError(int l, std::string n, std::string m) : location(l), token(n), msg(m) {}
 	const char* what() const noexcept (true) override;
+};
 };
 
 #endif // THOUGHTC_LEXER_H

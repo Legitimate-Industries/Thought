@@ -1,8 +1,9 @@
 #include "Lexer.h"
 #include <iostream>
 #include <algorithm>
+using namespace Thought;
 
-std::string to_string(Token::TokenType t)
+std::string Thought::to_string(Token::TokenType t)
 {
 	#define TOK_CASE(tok) case Token::tok: return #tok;
 	switch(t)
@@ -37,7 +38,7 @@ std::string to_string(Token::TokenType t)
 	}
 }
 
-std::string to_string(Token t) {
+std::string Thought::to_string(Token t) {
 	return "Token " + to_string(t.type) + ": " + t.text + " Source:" + std::to_string(t.start) + "[" +
 		std::to_string(t.rel_start) + ":L" + std::to_string(t.line) + "]";
 }

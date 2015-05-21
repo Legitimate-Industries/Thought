@@ -5,6 +5,7 @@
 #include <memory>
 #include <string>
 
+namespace Thought {
 enum class NodeType
 {
 };
@@ -25,5 +26,6 @@ public:
 };
 
 using NodePtr = std::shared_ptr<Node>;
+};
 
 #endif // THOUGHTC_NODE_H
