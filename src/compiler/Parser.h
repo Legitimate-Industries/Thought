@@ -1,5 +1,5 @@
-#ifndef AMAC_PARSER_H
-#define AMAC_PARSER_H
+#ifndef THOUGHTC_PARSER_H
+#define THOUGHTC_PARSER_H
 
 #include "Lexer.h"
 #include "nodes/Node.h"
@@ -42,4 +42,4 @@ public:
 	Token lookAhead(int distance);
 };
 
-#endif // AMAC_PARSER_H
+#endif // THOUGHTC_PARSER_H

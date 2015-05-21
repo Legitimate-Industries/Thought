@@ -1,6 +1,6 @@
-#include "AmaStringTable.h"
+#include "ThoughtStringTable.h"
 #include <algorithm>
-using namespace Ama;
+using namespace Thought;
 
 StringID StringTable::addString(std::string s) {
 	auto iter = std::find(mStrings.begin(), mStrings.end(), s);

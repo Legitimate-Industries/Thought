@@ -1,11 +1,11 @@
-#ifndef AMA_BASE_STRINGTABLE_H
-#define AMA_BASE_STRINGTABLE_H
+#ifndef THOUGHT_BASE_STRINGTABLE_H
+#define THOUGHT_BASE_STRINGTABLE_H
 
 #include <vector>
 #include <string>
-#include "AmaString.h"
+#include "ThoughtString.h"
 
-namespace Ama {
+namespace Thought {
 class StringTable {
 	std::vector<std::string> mStrings;
 public:
@@ -16,4 +16,4 @@ public:
 };
 };
 
-#endif // AMA_BASE_STRINGTABLE_H
+#endif // THOUGHT_BASE_STRINGTABLE_H

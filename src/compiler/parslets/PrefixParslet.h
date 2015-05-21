@@ -1,5 +1,5 @@
-#ifndef AMAC_PREFIXPARSELET_H
-#define AMAC_PREFIXPARSELET_H
+#ifndef THOUGHTC_PREFIXPARSELET_H
+#define THOUGHTC_PREFIXPARSELET_H
 
 #include "../nodes/Node.h"
 
@@ -10,4 +10,4 @@ public:
 	virtual Node* parse(Parser*, Token) = 0;
 };
 
-#endif // AMAC_PREFIXPARSELET_H
+#endif // THOUGHTC_PREFIXPARSELET_H

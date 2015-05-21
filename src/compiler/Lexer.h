@@ -1,5 +1,5 @@
-#ifndef AMAC_LEXER_H
-#define AMAC_LEXER_H
+#ifndef THOUGHTC_LEXER_H
+#define THOUGHTC_LEXER_H
 
 #include <string>
 #include <map>
@@ -81,4 +81,4 @@ struct LexerError : public std::exception
 	const char* what() const noexcept (true) override;
 };
 
-#endif // AMAC_LEXER_H
+#endif // THOUGHTC_LEXER_H

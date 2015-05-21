@@ -1,5 +1,5 @@
-#ifndef AMAC_PRECEDENCE_H
-#define AMAC_PRECEDENCE_H
+#ifndef THOUGHTC_PRECEDENCE_H
+#define THOUGHTC_PRECEDENCE_H
 
 struct Precedence
 {
@@ -16,4 +16,4 @@ struct Precedence
 	static const int CALL = 10;
 };
 
-#endif // AMAC_PRECEDENCE_H
+#endif // THOUGHTC_PRECEDENCE_H
