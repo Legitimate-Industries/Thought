@@ -10,7 +10,10 @@
 #include <memory>
 
 namespace Thought {
-class Parser
+	class Parser;
+};
+
+class Thought::Parser
 {
 	Lexer& lex;
 	std::vector<Token> read;
@@ -41,7 +44,6 @@ public:
 	Token consume(Token::TokenType);
 	Token consume();
 	Token lookAhead(int distance);
-};
 };
 
 #endif // THOUGHTC_PARSER_H

@@ -32,7 +32,11 @@ std::string Thought::to_string(Token::TokenType t)
 		TOK_CASE(ARROW)
 		TOK_CASE(EXCLAIM)
 		TOK_CASE(PLUSPLUS)
+		TOK_CASE(NOTEQUAL)
 
+		TOK_CASE(FUNCTION)
+
+		TOK_CASE(LINE_END)
 		TOK_CASE(EOI)
 		default: return "UNKNOWN";
 	}
@@ -66,8 +70,10 @@ Lexer::Lexer(std::string t) : text(t), index(0), lineCount(1), lcharCount(0) {
 	operators['{'] = Token::LBRACE;
 	operators['}'] = Token::RBRACE;
 	operators['!'] = Token::EXCLAIM;
+	operators[';'] = Token::SEMICOLON;
 
 	#define ADD_KEYWORD(word, type) keywords[word] = type;
+	ADD_KEYWORD("fun", Token::FUNCTION);
 	/*ADD_KEYWORD("def", Token::KEYWORD);
 	ADD_KEYWORD("private", Token::KEYWORD);
 	ADD_KEYWORD("public", Token::KEYWORD);
@@ -79,18 +85,22 @@ Lexer::Lexer(std::string t) : text(t), index(0), lineCount(1), lcharCount(0) {
 
 	#define ACCEPT_CHAR(chr) keyword_char.push_back(chr);
 	ACCEPT_CHAR('_');
-	/*ACCEPT_CHAR('!');
+	ACCEPT_CHAR('!');
 	ACCEPT_CHAR('?');
-	ACCEPT_CHAR('$');
+	/*ACCEPT_CHAR('$');
 	ACCEPT_CHAR('@');*/
 
 	#define ADD_SYMBOL(sym, type) symbols[sym] = type;
 	ADD_SYMBOL("->", Token::ARROW);
 	// ADD_SYMBOL("++", Token::PLUSPLUS);
+	ADD_SYMBOL("==", Token::EQUALEQUAL);
+	ADD_SYMBOL("!=", Token::NOTEQUAL);
 
 	#define ACCEPT_CHAR_SYM(chr) symbol_char.push_back(chr);
 	ACCEPT_CHAR_SYM('-');
 	ACCEPT_CHAR_SYM('>');
+	ACCEPT_CHAR_SYM('=');
+	ACCEPT_CHAR_SYM('!');
 	// ACCEPT_CHAR_SYM('+');
 }
 
@@ -121,9 +131,11 @@ Token Lexer::next()
 			continue;
 
 		if(c == '\n') {
+			tok.type = Token::LINE_END;
 			lineCount++;
 			lcharCount = 0;
-			continue;
+			// continue;
+			return tok;
 		}
 
 		if(isdigit(c)) {
@@ -167,6 +179,8 @@ Token Lexer::next()
 			escape_convert['n'] = '\n';
 			escape_convert['t'] = '\t';
 			escape_convert['s'] = ' ';
+			escape_convert['"'] = '\"';
+			escape_convert['\\'] = '\\';
 			do {
 				if(!has_next())
 					throw std::runtime_error("Unterminated string literal");
@@ -215,7 +229,12 @@ Token Lexer::next()
 				// TODO: Find a better way to do this...
 				while(true)
 				{
-					acc += next();
+					c = next();
+					if(c == '\n') {
+						lineCount++;
+						lcharCount = 0;
+					}
+					acc += c;
 					if(acc.size() > 2) {
 						acc = acc.substr(1);
 						if(acc == "##" || eoi())
@@ -227,6 +246,9 @@ Token Lexer::next()
 			// One line comment
 			while((c = next()) != '\n' && c != '\0') {
 			}
+			// Do the line thing (\n)
+			lineCount++;
+			lcharCount = 0;
 		} else {
 			std::string s; s += c;
 			throw LexerError(index - 1, s, "Invalid token");

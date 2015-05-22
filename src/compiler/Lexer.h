@@ -7,7 +7,12 @@
 #include <exception>
 
 namespace Thought {
-struct Token
+	struct Token;
+	class Lexer;
+	class LexerError;
+};
+
+struct Thought::Token
 {
 	enum TokenType
 	{
@@ -19,11 +24,13 @@ struct Token
 		PLUSPLUS,
 		ASTERISK,
 		FORWARDSLASH,
-		// SEMICOLON,
+		SEMICOLON,
 		COLON,
 		LPAREN,
 		RPAREN,
 		EQUAL,
+		EQUALEQUAL,
+		NOTEQUAL,
 		NAME,
 		KEYWORD,
 		CARET,
@@ -36,7 +43,9 @@ struct Token
 		ARROW,
 		EXCLAIM,
 
+		FUNCTION,
 		STRING,
+		LINE_END,
 
 		UNKNOWN,
 		EOI
@@ -47,10 +56,12 @@ struct Token
 	int line;
 };
 
-std::string to_string(Token::TokenType);
-std::string to_string(Token);
+namespace Thought {
+	std::string to_string(Token::TokenType);
+	std::string to_string(Token);
+};
 
-class Lexer
+class Thought::Lexer
 {
 	std::string text;
 	int index;
@@ -72,7 +83,7 @@ public:
 	void reset() { index = 0; lineCount = 1; }
 };
 
-struct LexerError : public std::exception
+struct Thought::LexerError : public std::exception
 {
 	int location;
 	std::string token;
@@ -80,7 +91,6 @@ struct LexerError : public std::exception
 
 	LexerError(int l, std::string n, std::string m) : location(l), token(n), msg(m) {}
 	const char* what() const noexcept (true) override;
-};
 };
 
 #endif // THOUGHTC_LEXER_H
