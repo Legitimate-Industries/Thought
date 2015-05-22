@@ -26,7 +26,7 @@ public:
 	T pop() {
 		assert(!isEmpty() && "Cannot pop an empty stack");
 		T item = stack[-1];
-		stack.removeAt(-1);
+		stack.remove(-1);
 		return item;
 	}
 

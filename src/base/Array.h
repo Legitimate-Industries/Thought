@@ -2,6 +2,7 @@
 #define THOUGHT_ARRAY_H
 
 #include <cassert>
+#include <iostream>
 
 // TODO: move from asserts to exceptions
 
@@ -50,18 +51,24 @@ public:
 	~Array() { clear(); }
 
 	int size() { return mNext; }
+
 	bool isEmpty() { return mNext == 0; }
+
 	int indexOf(const T& other) {
 		for(int i = 0; i < mNext; i++) {
 			if(mArray[i] == other) return i;
 		}
 		return -1;
 	}
+
 	int capacity() { return mSize; }
+
 	void add(const T& val) {
-		ensureSize(mNext + 1);
-		mArray[mNext++] = val;
+		// ensureSize(mNext + 1);
+		// mArray[mNext++] = val;
+		insert(val, -1);
 	}
+
 	void append(const Array<T>& arr) {
 		ensureSize(mNext + arr.mNext);
 		for(int i = 0; i < arr.mNext; i++) {
@@ -72,7 +79,21 @@ public:
 		if(mArray != nullptr) delete[] mArray;
 		mNext = mSize = 0;
 	}
-	void removeAt(int index) {
+
+	void insert(const T& val, int index) {
+		if(index < 0) index = ++mNext + index;
+		ensureSize(mNext);
+
+		ASSERT_RANGE(index, mNext);
+		// mArray[mNext++] = val;
+		for(int i = mNext - 1; i > index; i--) {
+			mArray[i] = mArray[i - 1];
+		}
+
+		mArray[index] = val;
+	}
+
+	void remove(int index) {
 		if(index < 0) index = mNext + index;
 		ASSERT_RANGE(index, mNext);
 
@@ -83,6 +104,7 @@ public:
 		mArray[mNext- 1] = T();
 		mNext--;
 	}
+
 	void truncate(int size) {
 		assert(size >= 0 && "Cannot truncate to a negative value");
 		if(size >= mNext) return;

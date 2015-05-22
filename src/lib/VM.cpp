@@ -15,7 +15,8 @@ VM::VM() : first(nullptr) {
 VM::~VM() {
 	// If pure GC, we simply would GC here, but we aren't
 	// Actually, forget the user. They shouldn't keep our values after we die.
-	// To forcefully collect all objects, we simply sweep without marking anything.
+	// To forcefully collect all objects, we simply clear, then sweep.
+	clear(); // Remove all references we have to any Value
 	// sweep();
 }
 
@@ -33,12 +34,18 @@ Value* VM::createValue(Value::Type type) {
 Value* VM::createDouble(double val) {
 	auto newval = createValue(Value::DOUBLE);
 	newval->v_double = val;
+
+	push(newval);
+
 	return newval;
 }
 
 Value* VM::createBool(bool val) {
 	auto newval = createValue(Value::BOOL);
 	newval->v_bool = val;
+
+	push(newval);
+
 	return newval;
 }
 
@@ -54,6 +61,9 @@ Value* VM::createString(const char* str, int size) {
 	vstr[size] = '\0';
 
 	newval->v_string = vstr; 
+
+	push(newval);
+
 	return newval;
 }
 
@@ -95,4 +105,22 @@ void VM::callBlock(Ref<Block> block, int args) {
 
 void VM::popFrame() {
 	frames.pop();
+}
+
+void VM::push(Value* val, int index) {
+	val->retain(); // So we are a prim example of reference counting
+	stack.insert(val, index);
+}
+
+Value* VM::pop(int idx) {
+	Value* val = stack[idx];
+	stack.remove(idx);
+	val->release();
+	return val;
+}
+
+void VM::clear() {
+	while(!stack.isEmpty()) {
+		pop();
+	}
 }
