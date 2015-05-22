@@ -119,6 +119,9 @@ public:
 			mArray[mNext -i -1] = temp;
 		}
 	}
+
+	T* begin() { return mArray; }
+	T* end() { return mArray + mNext; }
 };
 
 #undef ASSERT_RANGE

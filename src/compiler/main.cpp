@@ -1,9 +1,12 @@
 #include <iostream>
 #include "Lexer.h"
 #include "Parser.h"
+#include <lib/VM.h>
 
 #include <tclap/CmdLine.h>
 #include <fstream>
+
+using namespace Thought;
 
 // #include "nodes/Nodes.h"
 int main(int argc, char* argv[]) {
@@ -26,7 +29,7 @@ int main(int argc, char* argv[]) {
 	}
 	file.close();
 
-	Thought::Lexer l(text);
+	Lexer l(text);
 	// Parser parser(l);
 	l.reset();
 	while(l.has_next()) {
@@ -37,4 +40,19 @@ int main(int argc, char* argv[]) {
 		// 	std::cerr << e.what() << std::endl;
 		// }
 	}
+
+	// Finsh parser, then compile file into Ref<Block>
+	Ref<Block> testBlock(new Block);
+	testBlock->push_inst_ad(OP_SS, 2, 4);
+
+	VM vm;
+	auto ref1 = vm.createDouble(3);
+	auto ref2 = vm.createDouble(32);
+	vm.callBlock(testBlock, 0);
+
+	// You MUST release refs. not really
+	// The VM will forcefully delete all objects when they die, so be careful.
+	// NOT. DELETE YOUR FREAKING REFERENCES OR I WILL DO THIS, I SWEAR.
+	ref1->release();
+	ref2->release();
 }

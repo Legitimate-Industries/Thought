@@ -26,7 +26,7 @@ public:
 	T pop() {
 		assert(!isEmpty() && "Cannot pop an empty stack");
 		T item = stack[-1];
-		item.removeAt(-1);
+		stack.removeAt(-1);
 		return item;
 	}
 
@@ -37,13 +37,16 @@ public:
 
 	T& operator[](int idx) {
 		ASSERT_RANGE(idx, size());
-		return stack[-1 - index];
+		return stack[-1 - idx];
 	}
 
 	const T& operator[](int idx) const {
 		ASSERT_RANGE(idx, size());
-		return stack[-1 - index];
+		return stack[-1 - idx];
 	}
+
+	T* begin() { return stack.begin(); }
+	T* end() { return stack.end(); }
 };
 
 #undef ASSERT_RANGE
