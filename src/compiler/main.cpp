@@ -47,9 +47,15 @@ int main(int argc, char* argv[]) {
 
 	VM vm;
 	auto ref1 = vm.createDouble(3);
-	auto ref2 = vm.createDouble(32);
+	Value* ref2 = nullptr;
+	{
+		ref2 = vm.createString(std::string("Maine").c_str());
+	}
 	vm.callBlock(testBlock, 0);
 
+	{
+		std::cout << ref2->as_string().size() << std::endl;
+	}	
 	// You MUST release refs. not really
 	// The VM will forcefully delete all objects when they die, so be careful.
 	// NOT. DELETE YOUR FREAKING REFERENCES OR I WILL DO THIS, I SWEAR.

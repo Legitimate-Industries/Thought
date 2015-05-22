@@ -1,4 +1,5 @@
 #include "VM.h"
+#include <cstring>
 using namespace Thought;
 
 // Macros for extracting arguments from bytecode
@@ -41,6 +42,21 @@ Value* VM::createBool(bool val) {
 	return newval;
 }
 
+Value* VM::createString(const char* str) {
+	return createString(str, std::strlen(str));
+}
+
+Value* VM::createString(const char* str, int size) {
+	auto newval = createValue(Value::STRING);
+
+	char* vstr = new char[size + 1];
+	std::memcpy(vstr, str, size);
+	vstr[size] = '\0';
+
+	newval->v_string = vstr; 
+	return newval;
+}
+
 void VM::markAll() {
 	// Mark everything reachable
 
@@ -65,7 +81,7 @@ void VM::sweep() {
 
 			*live = unreach->next;
 			// Destroy the unreachable
-			delete unreach;
+			unreach->destroy();
 		} else {
 			(*live)->mark = 0;
 			live = &(*live)->next;

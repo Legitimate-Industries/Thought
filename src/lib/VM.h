@@ -6,6 +6,7 @@
 #include <base/Stack.h>
 #include <base/Block.h>
 #include <base/Ref.h>
+#include <string>
 #include <cstdint>
 
 namespace Thought {
@@ -37,7 +38,6 @@ class Thought::VM {
 	void markAll();
 	void mark(Value*);
 	void sweep();
-	void gc() { markAll(); sweep(); }
 
 	Value* createValue(Value::Type);
 public:
@@ -48,6 +48,11 @@ public:
 	void callBlock(Ref<Block>, int);
 	Value* createDouble(double);
 	Value* createBool(bool);
+	Value* createString(const char*);
+	Value* createString(const char*, int);
+
+	// Call this to start the mark-sweep collector
+	void gc() { markAll(); sweep(); }
 
 	// Make the VM uncopyable, so that we don't magically get 2 VM's running their GC's on the same objects
 	// That is asking for segfaults.
