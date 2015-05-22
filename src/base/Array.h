@@ -3,6 +3,8 @@
 
 #include <cassert>
 
+// TODO: move from asserts to exceptions
+
 namespace Thought {
 template<typename T>
 class Array;

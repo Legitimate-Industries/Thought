@@ -11,12 +11,23 @@ using namespace Thought;
 VM::VM() : first(nullptr) {
 }
 
+VM::~VM() {
+	// If pure GC, we simply would GC here, but we aren't
+}
+
 void VM::markAll() {
 	// Mark everything reachable
+
+	// Marking the stack
+	for(int i = 0; i < stack.size(); i++) {
+		mark(stack[i]);
+	}
 }
 
 void VM::mark(Value* val) {
 	// Mark all proper things for the value
+	if(val->mark) return;
+
 	val->mark = 1;
 }
 
@@ -32,15 +43,10 @@ void VM::sweep() {
 			(*live)->prev = unreach->prev;
 
 			// Destroy the unreachable
-			destroy(unreach);
+			delete unreach;
 		} else {
 			(*live)->mark = 0;
 			live = &(*live)->next;
 		}
 	}
-}
-
-void VM::destroy(Value* val) {
-	delete val;
-	val = nullptr;
 }

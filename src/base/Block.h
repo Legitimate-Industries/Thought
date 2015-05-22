@@ -19,6 +19,8 @@ class Thought::Block {
 public:
 	void push_instruction(OpCode, int = 0x0, int = 0x0, int = 0x0);
 	void push_instruction(OpCode, int = 0x0, int = 0x0);
+
+	std::uint32_t operator[](int index);
 };
 
 #endif // THOUGHT_BLOCK_H
