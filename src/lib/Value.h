@@ -30,7 +30,6 @@ public:
 	// Used for GC
 	int mark;
 
-	Value* prev;
 	Value* next;
 
 	void retain() {

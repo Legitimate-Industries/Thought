@@ -24,9 +24,6 @@ Value* VM::createValue(Value::Type type) {
 	newVal->type = type;
 
 	newVal->next = first;
-	if(first != nullptr)
-		first->prev = newVal;
-	newVal->prev = nullptr;
 
 	first = newVal;
 	return newVal;
@@ -66,14 +63,7 @@ void VM::sweep() {
 		if(!(*live)->mark) {
 			Value* unreach = *live;
 
-			// Correct the pointers
-			if(unreach->next != nullptr)
-				unreach->next->prev = unreach->prev;
-			if(unreach->prev != nullptr)
-				unreach->prev->next = unreach->next;
-
 			*live = unreach->next;
-
 			// Destroy the unreachable
 			delete unreach;
 		} else {
