@@ -40,6 +40,9 @@ public:
 		char* v_string; // Always heap-allocated
 	};
 
+	// Should suffice for now (make it an array for multiple prototypes)
+	Value* prototype;
+
 	// Accessing interface
 	double as_double() { return (type == DOUBLE ? v_double : 0.0); }
 	bool as_bool() { return (type == BOOL ? v_bool : false); }

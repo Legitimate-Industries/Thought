@@ -24,6 +24,7 @@ Value* VM::createValue(Value::Type type) {
 	Value* newVal = new Value;
 	newVal->mark = 0;
 	newVal->type = type;
+	newVal->prototype = nullptr;
 
 	newVal->next = first;
 
@@ -35,16 +36,12 @@ Value* VM::createDouble(double val) {
 	auto newval = createValue(Value::DOUBLE);
 	newval->v_double = val;
 
-	push(newval);
-
 	return newval;
 }
 
 Value* VM::createBool(bool val) {
 	auto newval = createValue(Value::BOOL);
 	newval->v_bool = val;
-
-	push(newval);
 
 	return newval;
 }
@@ -60,9 +57,7 @@ Value* VM::createString(const char* str, int size) {
 	std::memcpy(vstr, str, size);
 	vstr[size] = '\0';
 
-	newval->v_string = vstr; 
-
-	push(newval);
+	newval->v_string = vstr;
 
 	return newval;
 }
@@ -73,6 +68,13 @@ void VM::markAll() {
 	// Marking the stack
 	for(int i = 0; i < stack.size(); i++) {
 		mark(stack[i]);
+	}
+
+	// Marking callframe constants
+	for(CallFrame frame : frames) {
+		for(auto constant_pair : frame.code->constants) {
+			mark(constant_pair.second);
+		}
 	}
 }
 
@@ -112,10 +114,14 @@ void VM::push(Value* val, int index) {
 	stack.insert(val, index);
 }
 
+Value* VM::peek(int idx) {
+	return stack[idx];
+}
+
 Value* VM::pop(int idx) {
 	Value* val = stack[idx];
 	stack.remove(idx);
-	val->release();
+	val->release(); // We don;t want it any more, so we let it go
 	return val;
 }
 

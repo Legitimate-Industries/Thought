@@ -40,8 +40,6 @@ class Thought::VM {
 	void sweep();
 
 	Value* createValue(Value::Type);
-
-	void push(Value*, int = -1);
 public:
 	using InstSize = std::uint32_t;
 	VM();
@@ -49,13 +47,14 @@ public:
 
 	void callBlock(Ref<Block>, int);
 
-	// "create" methods automagically push their values to the stack
 	Value* createDouble(double);
 	Value* createBool(bool);
 	Value* createString(const char*);
 	Value* createString(const char*, int);
 
 	Value* pop(int = -1);
+	Value* peek(int = -1);
+	void push(Value*, int = -1);
 	void clear(); // Clears the stack
 
 	// Call this to start the mark-sweep collector
