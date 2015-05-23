@@ -15,6 +15,7 @@ class Thought::Value {
 	friend class VM;
 	Value() : refs(1) {}
 
+	friend class ValueBaseRef; // Allows for destruction of a value
 	void destroy() {
 		switch(type) {
 			case STRING:
