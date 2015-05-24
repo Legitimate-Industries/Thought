@@ -5,8 +5,8 @@ using namespace Thought;
 
 Block::~Block() {
 	// Clear references to constants
-	for(auto constant_pair : constants) {
-		constant_pair.second->release();
+	for(auto constant : constants) {
+		constant->release();
 	}
 }
 
@@ -22,12 +22,12 @@ void Block::push_inst_ad(OpCode op, int a, int d) {
 	push_inst_abc(op, a, d & 0xFF00, d & 0xFF);
 }
 
-void Block::add_constant(std::string name, Value* val) {
+int Block::add_constant(Value* val) {
 	val->retain();
-	constants[name] = val;
+	constants.add(val);
+	return constants.size() - 1;
 }
 
-Value* Block::get_constant(std::string name) {
-	auto itr = constants.find(name);
-	return (itr != constants.end() ? itr->second : nullptr);
+Value* Block::get_constant(int loc) {
+	return ((loc < 0 ? constants.size() + loc : loc) < constants.size() ? constants[loc] : nullptr);
 }

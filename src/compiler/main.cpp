@@ -43,15 +43,17 @@ int main(int argc, char* argv[]) {
 
 	// Finsh parser, then compile file into Ref<Block>
 	Ref<Block> testBlock(new Block);
-	testBlock->push_inst_ad(OP_SS, 2, 4);
+	testBlock->push_inst_ad(OP_PUSHL, 0, 0);
 
 	VM vm;
 	auto ref1 = vm.createDouble(3);
 	Value* ref2 = nullptr;
 	{
 		ref2 = vm.createString(std::string("Maine").c_str());
+		testBlock->add_constant(ref2);
 	}
 	vm.callBlock(testBlock, 0);
+	vm.dump();
 
 	{
 		std::cout << ref2->as_string().size() << std::endl;

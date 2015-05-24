@@ -64,6 +64,8 @@ public:
 	// That is asking for segfaults.
 	VM(const VM&) = delete;
 	VM& operator=(const VM&) = delete;
+
+	void dump(); // Debug dumping of the current state of the VM to cout
 };
 
 #endif // THOUGHT_VM_H

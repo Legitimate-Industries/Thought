@@ -72,8 +72,8 @@ void VM::markAll() {
 
 	// Marking callframe constants
 	for(CallFrame frame : frames) {
-		for(auto constant_pair : frame.code->constants) {
-			mark(constant_pair.second);
+		for(auto constant : frame.code->constants) {
+			mark(constant);
 		}
 	}
 }
@@ -128,5 +128,20 @@ Value* VM::pop(int idx) {
 void VM::clear() {
 	while(!stack.isEmpty()) {
 		pop();
+	}
+}
+
+void VM::dump() {
+	// Dump callframe info
+	// Dump value stack
+	for(int i = 0; i < stack.size(); i++) {
+		std::cout << "Location " << i << ": ";
+		#define VCASE(x) case Value::x: std::cout << #x << std::endl; break;
+		switch(stack[i]->type) {
+			VCASE(DOUBLE)
+			VCASE(BOOL)
+			VCASE(STRING)
+		}
+		#undef VCASE
 	}
 }

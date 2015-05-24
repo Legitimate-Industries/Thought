@@ -1,0 +1,45 @@
+(* EBNF for Thought, Version 0.1*)
+
+(* 
+	TODO:
+		- Add if statement, and (maybe) match statement [control flow]
+		- Add while, for, foreach, and do-while loops [loops]
+		- Add ==, !=, >, <, >=, <= [comparision]
+		- Add +, -, *, /, ^ [mathematics]
+*)
+(* ?[]? represent a character class. *)
+
+ident_char_b = ?[A-Za-z!?_]?;
+digit = ?[0-9]?;
+ident_char = ident_char_b | digit;
+qual_name = identifier, {".", identifier};
+all_char = ?All visible characters?;
+
+identifier = ident_char_b, { ident_char };
+object_pair = identifier, ":", object_rhs;
+object_rhs = qual_name
+           | object
+           | number
+           | array
+           | boolean
+           | function
+           | string
+           | function_call;
+
+number = [ '-' ], digit, {digit}, [ ("." | "e"), [ "-" ], {digit} ];
+object = [ "[", qual_name, "]" ], "{", [object_pair, {",", object_pair}], "}";
+string = '"', {all_char}, '"';
+boolean = "true" | "false";
+array = "[[", [object_rhs, {",", object_rhs}], "]]";
+function = "fun", "(", [identifier, {"," identifier}], ")", "{", {stat}, "}";
+function_call = qual_name, "(", [object_rhs, {",", object_rhs}], ")";
+
+global_assign = qual_name, "->", object_rhs;
+local_assign = qual_name, "=", object_rhs;
+return_stat = "return", object_rhs;
+stat = global_assign 
+     | local_assign
+     | return_stat
+     | object_rhs;
+
+root = {stat};

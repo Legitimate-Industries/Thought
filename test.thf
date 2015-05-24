@@ -1,0 +1,7 @@
+x -> {}
+y -> fun(g) {
+	g.x = 3
+}
+
+y(x)
+print(x.x) # Should result in 3.

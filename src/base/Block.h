@@ -15,7 +15,7 @@ namespace Thought {
 	// Codes go from 0 to 255
 	enum OpCode : std::uint8_t {
 		OP_NOP = 0x0,
-		OP_SS = 0x1, // Say Something (ad)
+		OP_PUSHL = 0x1, // Pushs a block local to the stack a-register number b-constant number 
 	};
 };
 
@@ -23,13 +23,14 @@ class Thought::Block {
 	friend class VM;
 
 	Array<std::uint32_t> bytecode;
-	std::map<std::string, Value*> constants;
+	Array<Value*> constants;
 public:
 	void push_inst_abc(OpCode, int a = 0x0, int b = 0x0, int c = 0x0);
 	void push_inst_ad(OpCode, int a = 0x0, int d = 0x0);
 
-	void add_constant(std::string, Value*);
-	Value* get_constant(std::string);
+	int add_constant(Value*);
+	Value* get_constant(int);
+	int constants_count() { return constants.size(); }
 
 	std::uint32_t operator[](int index);
 
