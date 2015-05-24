@@ -1,0 +1,9 @@
+x = {}
+y = fun(x) {
+	x.y = 3
+}
+
+y(x)
+print(x.y)
+
+## This is a comment. print(x) ##
