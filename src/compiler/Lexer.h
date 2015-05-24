@@ -39,7 +39,9 @@ struct Thought::Token
 		LBRACE,
 		RBRACE,
 		LBRACKET,
+		DLBRACKET,
 		RBRACKET,
+		DRBRACKET,
 		ARROW,
 		EXCLAIM,
 

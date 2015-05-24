@@ -1,7 +1,14 @@
-x -> {}
-y -> fun(g) {
-	g.x = 3
+obj -> {}
+obj.x = 3
+obj.y  = fun(x) { x + 3 }
+obj2 -> { y: 5, bam: fun() { print("bam!") } }
+obj2.op_add = fun(x)  { 
+    if( x.is_a?(obj2) ) {
+        this.y + x.y 
+    } else { 0 }
 }
-
-y(x)
-print(x.x) # Should result in 3.
+obj3 -> [obj2]  {}
+obj3.y = 6
+tobj4 = obj3
+tobj5 = [[obj3, 3, {x: 3}, [[4,5,6]], 4e-5, fun(x) { print("Mehn!") }, obj3.x, false]]
+obj2 + obj3

@@ -33,6 +33,8 @@ std::string Thought::to_string(Token::TokenType t)
 		TOK_CASE(EXCLAIM)
 		TOK_CASE(PLUSPLUS)
 		TOK_CASE(NOTEQUAL)
+		TOK_CASE(DLBRACKET)
+		TOK_CASE(DRBRACKET)
 
 		TOK_CASE(FUNCTION)
 
@@ -95,12 +97,16 @@ Lexer::Lexer(std::string t) : text(t), index(0), lineCount(1), lcharCount(0) {
 	// ADD_SYMBOL("++", Token::PLUSPLUS);
 	ADD_SYMBOL("==", Token::EQUALEQUAL);
 	ADD_SYMBOL("!=", Token::NOTEQUAL);
+	ADD_SYMBOL("[[", Token::DLBRACKET);
+	ADD_SYMBOL("]]", Token::DRBRACKET);
 
 	#define ACCEPT_CHAR_SYM(chr) symbol_char.push_back(chr);
 	ACCEPT_CHAR_SYM('-');
 	ACCEPT_CHAR_SYM('>');
 	ACCEPT_CHAR_SYM('=');
 	ACCEPT_CHAR_SYM('!');
+	ACCEPT_CHAR_SYM('[');
+	ACCEPT_CHAR_SYM(']');
 	// ACCEPT_CHAR_SYM('+');
 }
 
