@@ -21,7 +21,7 @@ class Thought::Value {
 
 	VM* home;
 
-	void destroy();
+	void destroy(bool = false);
 public:
 	enum Type {
 		DESTROYED, // NEVER SET VALUE TO THIS TYPE MANUALLY
@@ -69,7 +69,7 @@ public:
 	void release() {
 		refs--;
 		if(refs <= 0)
-			destroy();
+			destroy(true);
 	}
 
 	Value(const Value&) = delete;

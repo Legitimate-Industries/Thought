@@ -2,9 +2,9 @@
 #include "VM.h"
 using namespace Thought;
 
-void Value::destroy() {
+void Value::destroy(bool iso) {
 	if(type != DESTROYED) {
-		home->isolate(this);
+		if(iso) home->isolate(this);
 
 		switch(type) {
 			case STRING:
