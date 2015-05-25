@@ -23,7 +23,7 @@ class Thought::Array {
 	const int GROW_FACTOR = 2;
 
 	void ensureSize(int size) {
-		if(mSize > size) return; // We don't need to do anything
+		if(mSize >= size) return; // We don't need to do anything
 		int _size = (mSize < MIN_CAPACITY ? MIN_CAPACITY : mSize);
 		while(_size < size) {
 			_size *= GROW_FACTOR;
