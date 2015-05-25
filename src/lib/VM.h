@@ -55,6 +55,7 @@ public:
 	Value* createBool(bool);
 	Value* createString(const char*);
 	Value* createString(const char*, int);
+	Value* createTable(Value* = nullptr);
 
 	Value* pop(int = -1);
 	Value* peek(int = -1);

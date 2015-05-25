@@ -86,7 +86,7 @@ public:
 
 		ASSERT_RANGE(index, mNext);
 		// mArray[mNext++] = val;
-		for(int i = mSize - 1; i > index; i--) {
+		for(int i = mNext - 1; i > index; i--) {
 			mArray[i] = mArray[i - 1];
 		}
 
@@ -97,7 +97,7 @@ public:
 		if(index < 0) index = mNext + index;
 		ASSERT_RANGE(index, mNext);
 
-		for(int i = index; i < mNext- 1; i++) {
+		for(int i = index; i < mNext - 1; i++) {
 			mArray[i] = mArray[i + 1];
 		}
 

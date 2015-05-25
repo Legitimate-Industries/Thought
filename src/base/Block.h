@@ -15,9 +15,10 @@ namespace Thought {
 	// Codes go from 0 to 255
 	enum OpCode : std::uint8_t {
 		OP_NOP = 0x0,
-		OP_PUSHC = 0x1, // Pushs a block constant to the stack a-register number d-constant number
-		OP_EXIT = 0x2, // SPECIAL WHEN METHODIDS are IMPLEMENTED a-methodId to break to
-		OP_RETURN = 0x3, // Returns from the method currently running
+		OP_EXIT = 0x1, // SPECIAL WHEN METHODIDS are IMPLEMENTED a-methodId to break to
+		OP_RETURN = 0x2, // Returns from the method currently running
+
+		OP_PUSHC = 0x3, // Pushs a block constant to the stack a-register number d-constant number
 	};
 };
 

@@ -62,6 +62,15 @@ Value* VM::createString(const char* str, int size) {
 	return newval;
 }
 
+Value* VM::createTable(Value* proto) {
+	auto newval = createValue(Value::TABLE);
+
+	Table* table = new Table(newval);
+	newval->v_table = table;
+
+	return newval;
+}
+
 void VM::markAll() {
 	// Mark everything reachable
 
@@ -148,7 +157,7 @@ void VM::dump() {
 		}
 		#undef VCASE
 	}
-	
+
 	std::cout << "-- END THINK DUMP --" << std::endl;
 }
 

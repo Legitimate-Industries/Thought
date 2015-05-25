@@ -5,6 +5,8 @@
 #include <base/Array.h>
 #include <string>
 
+#include "Table.h"
+
 namespace Thought {
 	struct Value;
 };
@@ -20,6 +22,9 @@ class Thought::Value {
 		switch(type) {
 			case STRING:
 				delete[] v_string;
+				break;
+			case TABLE:
+				delete v_table;
 				break;
 		};
 		delete this;
@@ -39,6 +44,7 @@ public:
 		double v_double;
 		bool v_bool;
 		char* v_string; // Always heap-allocated
+		Table* v_table;
 	};
 
 	// Should suffice for now (make it an array for multiple prototypes)
@@ -49,6 +55,17 @@ public:
 	bool as_bool() { return (type == BOOL ? v_bool : false); }
 	std::string as_string() { return (type == STRING ? std::string(v_string) : ""); }
 	char* as_string_array() { return (type == STRING ? v_string : nullptr); }
+	Table* as_table() { return (type == TABLE ? v_table : nullptr); }
+	Table* force_table() { return (type == TABLE ? v_table : (prototype != nullptr ? prototype->force_table() : nullptr)); }
+
+	// Lovely prototype ref-counting proper interface to set prototypes
+	void set_prototype(Value* v) {
+		if(v != nullptr)
+			v->retain();
+		if(prototype != nullptr)
+			prototype->release();
+		prototype = v;
+	}
 
 	// Used for GC
 	int mark;
@@ -67,6 +84,11 @@ public:
 		if(refs <= 0)
 			destroy();
 	}
+
+	Value(const Value&) = delete;
+	Value& operator=(const Value&) = delete;
+	// Make values uncopyable until we separate the actual objects (double, string, table)
+	// from Value, so that 2 values can safely refer to the same object
 };
 
 #endif // THOUGHT_VALUE_H
