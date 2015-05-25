@@ -21,7 +21,7 @@ VM::~VM() {
 }
 
 ValueHandle VM::createValue(Value::Type type) {
-	Value* newVal = new Value;
+	Value* newVal = new Value(this);
 	newVal->mark = 0;
 	newVal->type = type;
 	newVal->prototype = nullptr;
@@ -108,6 +108,20 @@ void VM::sweep() {
 			live = &(*live)->next;
 		}
 	}
+}
+
+void VM::isolate(Value* val) {
+	// Used for when a value is destroyed by ref counting
+	// Removes a value from the GC linked list
+	Value** list = &first;
+	while(*list) {
+		if(*list == val) {
+			*list = (*list)->next;
+			return;
+		} 
+		list = &(*list)->next;
+	}
+	// The Value never was on the list if it reaches here.
 }
 
 void VM::callBlock(Ref<Block> block, unsigned int args) {

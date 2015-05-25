@@ -10,31 +10,18 @@
 namespace Thought {
 	struct Value;
 	struct ValueHandle;
+	struct VM;
 };
 
 class Thought::Value {
 	std::size_t refs;
 	// Make values only constructable by a VM Object
 	friend class VM;
-	Value() : refs(0) {}
+	Value(VM* vm) : refs(0), home(vm) {}
 
-	friend class ValueBaseRef; // Allows for destruction of a value
-	void destroy() {
-		if(type != DESTROYED) {
-			switch(type) {
-				case STRING:
-					delete[] v_string;
-					break;
-				case TABLE:
-					delete v_table;
-					break;
-			};
-			// This is THE STUPIDEST trick in the book, and will not 
-			// work if immediately overwritten by accident, but will work for now.
-			type = DESTROYED; 
-			delete this;
-		}
-	}
+	VM* home;
+
+	void destroy();
 public:
 	enum Type {
 		DESTROYED, // NEVER SET VALUE TO THIS TYPE MANUALLY

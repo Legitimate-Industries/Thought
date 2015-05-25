@@ -10,7 +10,7 @@
 #include <cstdint>
 
 namespace Thought {
-class VM;
+	class VM;
 };
 
 class Thought::VM {
@@ -38,9 +38,11 @@ class Thought::VM {
 	ValueHandle retrieve(const CallFrame& frame, int p) { return stack[frame.bp + p]; }
 	void store(const CallFrame& frame, int p, ValueHandle val) { stack.insert(val, frame.bp + p); }
 
+	friend class Value;
 	void markAll();
 	void mark(Value*);
 	void sweep();
+	void isolate(Value*);
 
 	ValueHandle createValue(Value::Type);
 	void run(); // Runs the frame stack until isDone
