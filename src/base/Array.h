@@ -23,7 +23,7 @@ class Thought::Array {
 	const int GROW_FACTOR = 2;
 
 	void ensureSize(int size) {
-		if(mSize >= size) return; // We don't need to do anything
+		if(mSize > size) return; // We don't need to do anything
 		int _size = (mSize < MIN_CAPACITY ? MIN_CAPACITY : mSize);
 		while(_size < size) {
 			_size *= GROW_FACTOR;
@@ -50,6 +50,7 @@ public:
 	Array(const Array<T>& other) : Array() { append(other); }
 	~Array() { clear(); }
 
+	int capacity() { return mSize; }
 	int size() { return mNext; }
 
 	bool isEmpty() { return mNext == 0; }
@@ -60,8 +61,6 @@ public:
 		}
 		return -1;
 	}
-
-	int capacity() { return mSize; }
 
 	void add(const T& val) {
 		// ensureSize(mNext + 1);
@@ -81,12 +80,13 @@ public:
 	}
 
 	void insert(const T& val, int index) {
-		if(index < 0) index = ++mNext + index;
+		++mNext; // increase our array's size by one
+		if(index < 0) index = mNext + index;
 		ensureSize(mNext);
 
 		ASSERT_RANGE(index, mNext);
 		// mArray[mNext++] = val;
-		for(int i = mNext - 1; i > index; i--) {
+		for(int i = mSize - 1; i > index; i--) {
 			mArray[i] = mArray[i - 1];
 		}
 

@@ -18,10 +18,13 @@ class Thought::VM {
 	Value* first;
 
 	struct CallFrame {
-		int ip; // instruction pointer
-		int bp; // base pointer (where the stack starts for us)
+		unsigned int ip; // instruction pointer
+		unsigned int bp; // base pointer (where the stack starts for us)
 		// Figure out how to store and retrieve code blocks.
 		Ref<Block> code; // Reference to the block of code we are
+
+		CallFrame() {}
+		CallFrame(unsigned int i, unsigned int b, Ref<Block> c) : ip(i), bp(b), code(c) {}
 	};
 
 	Stack<CallFrame> frames;
@@ -33,19 +36,20 @@ class Thought::VM {
 	void popFrame();
 
 	Value* retrieve(const CallFrame& frame, int p) { return stack[frame.bp + p]; }
-	void store(const CallFrame& frame, int p, Value* val) { stack[frame.bp + p] = val; }
+	void store(const CallFrame& frame, int p, Value* val) { stack.insert(val, frame.bp + p); }
 
 	void markAll();
 	void mark(Value*);
 	void sweep();
 
 	Value* createValue(Value::Type);
+	void run(); // Runs the frame stack until isDone
 public:
 	using InstSize = std::uint32_t;
 	VM();
 	~VM();
 
-	void callBlock(Ref<Block>, int);
+	void callBlock(Ref<Block>, unsigned int);
 
 	Value* createDouble(double);
 	Value* createBool(bool);

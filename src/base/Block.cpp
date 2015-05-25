@@ -1,7 +1,7 @@
 #include "Block.h"
 using namespace Thought;
 
-#define PACK_OP_ABC(x, a, b, c) (x & 0xFF << 24) + (a & 0xFF << 16) + (b & 0xFF << 8) + (c & 0xFF)
+#define PACK_OP_ABC(x, a, b, c) c + (b << 8) + (a << 16) + (x << 24)
 
 Block::~Block() {
 	// Clear references to constants

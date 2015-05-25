@@ -101,8 +101,11 @@ void VM::sweep() {
 	}
 }
 
-void VM::callBlock(Ref<Block> block, int args) {
-	frames.push(CallFrame {0, stack.size() - args, block});
+void VM::callBlock(Ref<Block> block, unsigned int args) {
+	frames.push(CallFrame(0, stack.size() - args, block));
+
+	// Question: Expose run() separately?
+	run();
 }
 
 void VM::popFrame() {
@@ -132,6 +135,7 @@ void VM::clear() {
 }
 
 void VM::dump() {
+	std::cout << "-- THINK (THOUGHT VM) DUMP --" << std::endl;
 	// Dump callframe info
 	// Dump value stack
 	for(int i = 0; i < stack.size(); i++) {
@@ -143,5 +147,35 @@ void VM::dump() {
 			VCASE(STRING)
 		}
 		#undef VCASE
+	}
+	
+	std::cout << "-- END THINK DUMP --" << std::endl;
+}
+
+void VM::run() {
+	while(!isDone()) {
+		CallFrame& frame = top();
+		if(frame.ip >= frame.code->size())
+			// Overflow, method failed to end in RETURN or END
+			throw "Too lazy to implement an actual exception yet. Deal with this for now. #1";
+		std::uint32_t raw_inst = (*frame.code)[frame.ip];
+		std::uint8_t inst = DECODE_INST(raw_inst);
+		std::uint8_t a = DECODE_A(raw_inst);
+		std::uint8_t b = DECODE_B(raw_inst);
+		std::uint8_t c = DECODE_C(raw_inst);
+		std::uint16_t d = DECODE_D(raw_inst);
+		switch(inst) {
+			case OP_PUSHC: {
+				Value* cons = frame.code->get_constant(d);
+				store(frame, a, cons);
+				break;
+			}
+			case OP_EXIT:
+			case OP_RETURN: {
+				popFrame();
+				break;
+			}
+		};
+		frame.ip++;
 	}
 }

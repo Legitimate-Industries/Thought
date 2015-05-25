@@ -43,7 +43,8 @@ int main(int argc, char* argv[]) {
 
 	// Finsh parser, then compile file into Ref<Block>
 	Ref<Block> testBlock(new Block);
-	testBlock->push_inst_ad(OP_PUSHL, 0, 0);
+	testBlock->push_inst_ad(OP_PUSHC, 0, 0);
+	testBlock->push_inst_ad(OP_RETURN, 0, 0);
 
 	VM vm;
 	auto ref1 = vm.createDouble(3);
