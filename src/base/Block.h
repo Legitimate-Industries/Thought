@@ -26,14 +26,14 @@ class Thought::Block {
 	friend class VM;
 
 	Array<std::uint32_t> bytecode;
-	Array<Value*> constants;
+	Array<ValueHandle> constants;
 public:
 	void push_inst_abc(OpCode, int a = 0x0, int b = 0x0, int c = 0x0);
 	void push_inst_ad(OpCode, int a = 0x0, int d = 0x0);
 	int size() { return bytecode.size(); }
 
-	int add_constant(Value*);
-	Value* get_constant(int);
+	int add_constant(ValueHandle);
+	ValueHandle get_constant(int);
 	int constants_count() { return constants.size(); }
 
 	std::uint32_t operator[](int index);

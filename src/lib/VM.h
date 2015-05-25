@@ -14,7 +14,7 @@ class VM;
 };
 
 class Thought::VM {
-	Array<Value*> stack;
+	Array<ValueHandle> stack;
 	Value* first;
 
 	struct CallFrame {
@@ -35,14 +35,14 @@ class Thought::VM {
 
 	void popFrame();
 
-	Value* retrieve(const CallFrame& frame, int p) { return stack[frame.bp + p]; }
-	void store(const CallFrame& frame, int p, Value* val) { stack.insert(val, frame.bp + p); }
+	ValueHandle retrieve(const CallFrame& frame, int p) { return stack[frame.bp + p]; }
+	void store(const CallFrame& frame, int p, ValueHandle val) { stack.insert(val, frame.bp + p); }
 
 	void markAll();
 	void mark(Value*);
 	void sweep();
 
-	Value* createValue(Value::Type);
+	ValueHandle createValue(Value::Type);
 	void run(); // Runs the frame stack until isDone
 public:
 	using InstSize = std::uint32_t;
@@ -51,15 +51,15 @@ public:
 
 	void callBlock(Ref<Block>, unsigned int);
 
-	Value* createDouble(double);
-	Value* createBool(bool);
-	Value* createString(const char*);
-	Value* createString(const char*, int);
-	Value* createTable(Value* = nullptr);
+	ValueHandle createDouble(double);
+	ValueHandle createBool(bool);
+	ValueHandle createString(const char*);
+	ValueHandle createString(const char*, int);
+	ValueHandle createTable(Value* = nullptr);
 
-	Value* pop(int = -1);
-	Value* peek(int = -1);
-	void push(Value*, int = -1);
+	ValueHandle pop(int = -1);
+	ValueHandle peek(int = -1);
+	void push(ValueHandle, int = -1);
 	void clear(); // Clears the stack
 
 	// Call this to start the mark-sweep collector

@@ -20,7 +20,7 @@ VM::~VM() {
 	// sweep();
 }
 
-Value* VM::createValue(Value::Type type) {
+ValueHandle VM::createValue(Value::Type type) {
 	Value* newVal = new Value;
 	newVal->mark = 0;
 	newVal->type = type;
@@ -29,44 +29,44 @@ Value* VM::createValue(Value::Type type) {
 	newVal->next = first;
 
 	first = newVal;
-	return newVal;
+	return ValueHandle(newVal);
 }
 
-Value* VM::createDouble(double val) {
+ValueHandle VM::createDouble(double val) {
 	auto newval = createValue(Value::DOUBLE);
-	newval->v_double = val;
+	newval.val->v_double = val;
 
 	return newval;
 }
 
-Value* VM::createBool(bool val) {
+ValueHandle VM::createBool(bool val) {
 	auto newval = createValue(Value::BOOL);
-	newval->v_bool = val;
+	newval.val->v_bool = val;
 
 	return newval;
 }
 
-Value* VM::createString(const char* str) {
+ValueHandle VM::createString(const char* str) {
 	return createString(str, std::strlen(str));
 }
 
-Value* VM::createString(const char* str, int size) {
+ValueHandle VM::createString(const char* str, int size) {
 	auto newval = createValue(Value::STRING);
 
 	char* vstr = new char[size + 1];
 	std::memcpy(vstr, str, size);
 	vstr[size] = '\0';
 
-	newval->v_string = vstr;
+	newval.val->v_string = vstr;
 
 	return newval;
 }
 
-Value* VM::createTable(Value* proto) {
+ValueHandle VM::createTable(Value* proto) {
 	auto newval = createValue(Value::TABLE);
 
-	Table* table = new Table(newval);
-	newval->v_table = table;
+	Table* table = new Table(newval.val);
+	newval.val->v_table = table;
 
 	return newval;
 }
@@ -76,13 +76,13 @@ void VM::markAll() {
 
 	// Marking the stack
 	for(int i = 0; i < stack.size(); i++) {
-		mark(stack[i]);
+		mark(stack[i].val);
 	}
 
 	// Marking callframe constants
 	for(CallFrame frame : frames) {
 		for(auto constant : frame.code->constants) {
-			mark(constant);
+			mark(constant.val);
 		}
 	}
 }
@@ -121,19 +121,19 @@ void VM::popFrame() {
 	frames.pop();
 }
 
-void VM::push(Value* val, int index) {
-	val->retain(); // So we are a prim example of reference counting
+void VM::push(ValueHandle val, int index) {
+	// val->retain(); // So we are a prim example of reference counting
 	stack.insert(val, index);
 }
 
-Value* VM::peek(int idx) {
+ValueHandle VM::peek(int idx) {
 	return stack[idx];
 }
 
-Value* VM::pop(int idx) {
-	Value* val = stack[idx];
+ValueHandle VM::pop(int idx) {
+	ValueHandle val = stack[idx];
 	stack.remove(idx);
-	val->release(); // We don;t want it any more, so we let it go
+	// val->release(); // We don;t want it any more, so we let it go
 	return val;
 }
 
@@ -150,7 +150,7 @@ void VM::dump() {
 	for(int i = 0; i < stack.size(); i++) {
 		std::cout << "Location " << i << ": ";
 		#define VCASE(x) case Value::x: std::cout << #x << std::endl; break;
-		switch(stack[i]->type) {
+		switch(stack[i].val->type) {
 			VCASE(DOUBLE)
 			VCASE(BOOL)
 			VCASE(STRING)
@@ -175,7 +175,7 @@ void VM::run() {
 		std::uint16_t d = DECODE_D(raw_inst);
 		switch(inst) {
 			case OP_PUSHC: {
-				Value* cons = frame.code->get_constant(d);
+				ValueHandle cons = frame.code->get_constant(d);
 				store(frame, a, cons);
 				break;
 			}

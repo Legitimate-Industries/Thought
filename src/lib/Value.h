@@ -9,28 +9,36 @@
 
 namespace Thought {
 	struct Value;
+	struct ValueHandle;
 };
 
 class Thought::Value {
 	std::size_t refs;
 	// Make values only constructable by a VM Object
 	friend class VM;
-	Value() : refs(1) {}
+	Value() : refs(0) {}
 
 	friend class ValueBaseRef; // Allows for destruction of a value
 	void destroy() {
-		switch(type) {
-			case STRING:
-				delete[] v_string;
-				break;
-			case TABLE:
-				delete v_table;
-				break;
-		};
-		delete this;
+		if(type != DESTROYED) {
+			switch(type) {
+				case STRING:
+					delete[] v_string;
+					break;
+				case TABLE:
+					delete v_table;
+					break;
+			};
+			// This is THE STUPIDEST trick in the book, and will not 
+			// work if immediately overwritten by accident, but will work for now.
+			type = DESTROYED; 
+			delete this;
+		}
 	}
 public:
 	enum Type {
+		DESTROYED, // NEVER SET VALUE TO THIS TYPE MANUALLY
+
 		DOUBLE,
 		BOOL,
 		STRING,
@@ -49,14 +57,6 @@ public:
 
 	// Should suffice for now (make it an array for multiple prototypes)
 	Value* prototype;
-
-	// Accessing interface
-	double as_double() { return (type == DOUBLE ? v_double : 0.0); }
-	bool as_bool() { return (type == BOOL ? v_bool : false); }
-	std::string as_string() { return (type == STRING ? std::string(v_string) : ""); }
-	char* as_string_array() { return (type == STRING ? v_string : nullptr); }
-	Table* as_table() { return (type == TABLE ? v_table : nullptr); }
-	Table* force_table() { return (type == TABLE ? v_table : (prototype != nullptr ? prototype->force_table() : nullptr)); }
 
 	// Lovely prototype ref-counting proper interface to set prototypes
 	void set_prototype(Value* v) {
@@ -89,6 +89,69 @@ public:
 	Value& operator=(const Value&) = delete;
 	// Make values uncopyable until we separate the actual objects (double, string, table)
 	// from Value, so that 2 values can safely refer to the same object
+	// Actually, still keep values uncopyable. It's nice.
+};
+
+// This is the class users manipulate, pointing to a Value in memory
+class Thought::ValueHandle {
+	Value* val;
+	// Right now, it is exclusively created by the VM. Maybe later on, I'll free it up.
+	friend class VM;
+	ValueHandle(Value* v) : val(v) { if(!isNull()) val->retain(); }
+public:
+	ValueHandle() : val(nullptr) {}
+	ValueHandle(const ValueHandle& o) { val = o.val; if(!isNull()) val->retain(); }
+	ValueHandle& operator=(const ValueHandle& o) { 
+		if(!isNull()) val->release();
+		val = o.val; 
+		if(!isNull()) val->retain(); 
+		return *this;
+	}
+	~ValueHandle() { if(!isNull()) val->release(); }
+
+	bool isNull() { return val == nullptr; }
+
+	// Accessing interface
+	double as_double() { 
+		if(val == nullptr || val->type != Value::DOUBLE)
+			return 0.0;
+		return val->v_double;
+	}
+
+	bool as_bool() { 
+		if(val == nullptr || val->type != Value::BOOL)
+			return false;
+		return val->v_bool; 
+	}
+
+	std::string as_string() { 
+		if(val == nullptr || val->type != Value::STRING)
+			return "";
+		return val->v_string;
+	}
+
+	char* as_string_array() { 
+		if(val == nullptr || val->type != Value::STRING)
+			return nullptr;
+		return val->v_string;
+	}
+
+	Table* as_table() { 
+		if(val == nullptr || val->type != Value::TABLE)
+			return nullptr;
+		return val->v_table;
+	}
+
+	Table* force_table() { 
+		if(val == nullptr) return nullptr;
+		if(val->type == Value::TABLE)
+			return val->v_table;
+		else {
+			if(val->prototype != nullptr)
+				return ValueHandle(val->prototype).force_table();
+			return nullptr;
+		}
+	}
 };
 
 #endif // THOUGHT_VALUE_H
