@@ -84,6 +84,7 @@ void VM::markAll() {
 		for(auto constant : frame.code->constants) {
 			mark(constant.val);
 		}
+		mark(frame.self.val);
 	}
 }
 
@@ -124,8 +125,8 @@ void VM::isolate(Value* val) {
 	// The Value never was on the list if it reaches here.
 }
 
-void VM::callBlock(Ref<Block> block, unsigned int args) {
-	frames.push(CallFrame(0, stack.size() - args, block));
+void VM::callBlock(Ref<Block> block, unsigned int args, ValueHandle receiver) {
+	frames.push(CallFrame(0, stack.size() - args, block, receiver));
 
 	// Question: Expose run() separately?
 	run();

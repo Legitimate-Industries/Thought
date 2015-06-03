@@ -9,7 +9,7 @@ class Parser;
 class InfixParslet {
 public:
 	virtual ~InfixParslet() {}
-	virtual Node* parse(Parser*, Node*, Token) = 0;
+	virtual NodePtr parse(Parser*, NodePtr, Token) = 0;
 	virtual int getPrecedence() = 0;
 };
 };

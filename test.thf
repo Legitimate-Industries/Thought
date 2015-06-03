@@ -2,7 +2,8 @@ obj -> {}
 obj.x = 3
 obj.y  = fun(x) { x + 3 }
 obj2 -> { y: 5, bam: fun() { print("bam!") } }
-obj2.op_add = fun(x)  { 
+# Should we go Python, and require an explict "this"? (Easier than implicit, tho')
+obj2.op_add = fun(this, x)  { 
     if( x.is_a?(obj2) ) {
         this.y + x.y 
     } else { 0 }

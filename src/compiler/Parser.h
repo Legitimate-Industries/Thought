@@ -37,8 +37,8 @@ public:
 
 	// BlockNode* parseBlock();
 
-	Node* parseNode() { return parseNode(0); }
-	Node* parseNode(int);
+	NodePtr parseNode() { return parseNode(0); }
+	NodePtr parseNode(int);
 
 	bool match(Token::TokenType);
 	Token consume(Token::TokenType);

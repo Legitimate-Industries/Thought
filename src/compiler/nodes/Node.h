@@ -4,17 +4,19 @@
 #include <iostream>
 #include <memory>
 #include <string>
+#include <cassert>
 
 namespace Thought {
-enum class NodeType
-{
-};
+// enum class NodeType
+// {
+// 	BINARY,
+// };
 
 #define NTOS(n) case NodeType::n: return #n;
-static std::string nt_to_string(NodeType n) {
-	switch(n) {
-	};
-}
+// static std::string nt_to_string(NodeType n) {
+// 	switch(n) {
+// 	};
+// }
 #undef NTOS
 
 class Node
@@ -22,7 +24,7 @@ class Node
 public:
 	virtual ~Node() {}
 	virtual void print(std::ostream&) const = 0;
-	virtual NodeType getType() = 0;
+	// virtual NodeType getType() = 0;
 };
 
 using NodePtr = std::shared_ptr<Node>;

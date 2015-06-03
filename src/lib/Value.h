@@ -96,41 +96,41 @@ public:
 	}
 	~ValueHandle() { if(!isNull()) val->release(); }
 
-	bool isNull() { return val == nullptr; }
+	bool isNull() const { return val == nullptr; }
 
 	// Accessing interface
-	double as_double() { 
-		if(val == nullptr || val->type != Value::DOUBLE)
+	double as_double() const { 
+		if(isNull() || val->type != Value::DOUBLE)
 			return 0.0;
 		return val->v_double;
 	}
 
-	bool as_bool() { 
-		if(val == nullptr || val->type != Value::BOOL)
+	bool as_bool() const { 
+		if(isNull() || val->type != Value::BOOL)
 			return false;
 		return val->v_bool; 
 	}
 
-	std::string as_string() { 
-		if(val == nullptr || val->type != Value::STRING)
+	std::string as_string() const { 
+		if(isNull() || val->type != Value::STRING)
 			return "";
 		return val->v_string;
 	}
 
-	char* as_string_array() { 
-		if(val == nullptr || val->type != Value::STRING)
+	char* as_string_array() const { 
+		if(isNull() || val->type != Value::STRING)
 			return nullptr;
 		return val->v_string;
 	}
 
-	Table* as_table() { 
-		if(val == nullptr || val->type != Value::TABLE)
+	Table* as_table() const { 
+		if(isNull() || val->type != Value::TABLE)
 			return nullptr;
 		return val->v_table;
 	}
 
-	Table* force_table() { 
-		if(val == nullptr) return nullptr;
+	Table* force_table() const { 
+		if(isNull()) return nullptr;
 		if(val->type == Value::TABLE)
 			return val->v_table;
 		else {
@@ -138,6 +138,14 @@ public:
 				return ValueHandle(val->prototype).force_table();
 			return nullptr;
 		}
+	}
+
+	void set_prototype(Value* value) {
+		if(val->prototype != nullptr)
+			val->prototype->release();
+		if(value != nullptr)
+			value->retain();
+		val->prototype = value;
 	}
 };
 

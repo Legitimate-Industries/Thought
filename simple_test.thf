@@ -7,3 +7,13 @@ y(x)
 print(x.y)
 
 ## This is a comment. print(x) ##
+##
+y.x(3)
+
+LOAD_STRING 0 // "x"
+LOAD_TABLE 1 // y
+LOAD_FUNCTION 1 0 0 // Stack: y.x(Function) y(Table)
+LOAD_CONSTANT 2 0 // a - register d - constant number
+CALL_FUNCTION 0 2 // a - func reg b - # args
+// return stack[-1]
+##

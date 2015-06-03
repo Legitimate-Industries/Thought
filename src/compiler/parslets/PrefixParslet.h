@@ -8,7 +8,7 @@ class Parser;
 class PrefixParslet {
 public:
 	virtual ~PrefixParslet() {}
-	virtual Node* parse(Parser*, Token) = 0;
+	virtual NodePtr parse(Parser*, Token) = 0;
 };
 };
 

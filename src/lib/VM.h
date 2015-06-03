@@ -23,8 +23,12 @@ class Thought::VM {
 		// Figure out how to store and retrieve code blocks.
 		Ref<Block> code; // Reference to the block of code we are
 
+		// Do we store a separate "receiver" ValueHandle? For now, I'll do it.
+		ValueHandle self;
+
 		CallFrame() {}
-		CallFrame(unsigned int i, unsigned int b, Ref<Block> c) : ip(i), bp(b), code(c) {}
+		CallFrame(unsigned int i, unsigned int b, Ref<Block> c, ValueHandle rec) 
+		: ip(i), bp(b), code(c), self(rec) {}
 	};
 
 	Stack<CallFrame> frames;
@@ -51,7 +55,7 @@ public:
 	VM();
 	~VM();
 
-	void callBlock(Ref<Block>, unsigned int);
+	void callBlock(Ref<Block>, unsigned int, ValueHandle = ValueHandle());
 
 	ValueHandle createDouble(double);
 	ValueHandle createBool(bool);

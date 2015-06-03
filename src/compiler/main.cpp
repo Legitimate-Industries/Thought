@@ -30,7 +30,10 @@ int main(int argc, char* argv[]) {
 	file.close();
 
 	Lexer l(text);
-	// Parser parser(l);
+	Parser parser(l);
+	auto node = parser.parseNode();
+	node->print(std::cout);
+	std::cout << std::endl;
 	l.reset();
 	while(l.has_next()) {
 		// try
@@ -57,10 +60,11 @@ int main(int argc, char* argv[]) {
 	vm.dump();
 
 	{
-		std::cout << ref2.as_string().size() << std::endl;
+		std::cout << ref2.as_string() << std::endl;
 	}	
 	// You MUST release refs. not really
 	// The VM will forcefully delete all objects when they die, so be careful.
 	// NOT. DELETE YOUR FREAKING REFERENCES OR I WILL DO THIS, I SWEAR.
 	// NOPE, MADE YOUR LIFE EASIER. References (through ValueHandle) will Handle themselves
+	// APPRECIATE IT.
 }

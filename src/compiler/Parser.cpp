@@ -2,13 +2,14 @@
 #include <stdexcept>
 using namespace Thought;
 
-// #include "parslets/Parslets.h"
+#include "parslets/Parslets.h"
+#include "nodes/Node.h"
 // #include "parslets/Precedence.h"
 
 Parser::Parser(Lexer& l) : lex(l) {
 	// register_parser(Token::NAME, new NameParslet());
-	// register_parser(Token::NUMBER, new LiteralParslet());
-	// register_parser(Token::FLOAT, new LiteralParslet());
+	register_parser(Token::NUMBER, new LiteralParslet());
+	register_parser(Token::FLOAT, new LiteralParslet());
 	// register_parser(Token::STRING, new LiteralParslet());
 	// register_parser(Token::LPAREN, new GroupParslet());
 	// register_parser(Token::LPAREN, new CallParslet());
@@ -16,13 +17,13 @@ Parser::Parser(Lexer& l) : lex(l) {
 
 	// prefix(Token::DASH, Precedence::PREFIX);
 
-	// // infix(Token::EQUAL, Precedence::ASSIGNMENT, false);
-	// infix(Token::DASH, Precedence::SUBTRACTION, false);
-	// infix(Token::PLUS, Precedence::ADDITION, false);
-	// infix(Token::FORWARDSLASH, Precedence::DIVISION, false);
-	// infix(Token::ASTERISK, Precedence::MULTIPLICATION, false);
-	// infix(Token::CARET, Precedence::POWER, false);
-	// infix(Token::ARROW, Precedence::METHOD, false);
+	// infix(Token::EQUAL, Precedence::ASSIGNMENT, false);
+	infix(Token::DASH, Precedence::SUBTRACTION, false);
+	infix(Token::PLUS, Precedence::ADDITION, false);
+	infix(Token::FORWARDSLASH, Precedence::DIVISION, false);
+	infix(Token::ASTERISK, Precedence::MULTIPLICATION, false);
+	infix(Token::CARET, Precedence::POWER, false);
+	infix(Token::ARROW, Precedence::METHOD, false);
 	// infix(Token::TILDE, Precedence::CONCATENATION, false);
 
 	// postfix(Token::PLUSPLUS, Precedence::POSTFIX);
@@ -45,7 +46,7 @@ void Parser::prefix(Token::TokenType t, int p)
 
 void Parser::infix(Token::TokenType t, int p, bool r)
 {
-	// register_parser(t, new BinaryOperatorParslet(p, r));
+	register_parser(t, new BinaryParslet(p, r));
 }
 
 void Parser::postfix(Token::TokenType t, int p)
@@ -53,7 +54,7 @@ void Parser::postfix(Token::TokenType t, int p)
 	// register_parser(t, new PostfixOperatorParslet(p));
 }
 
-Node* Parser::parseNode(int precedence)
+NodePtr Parser::parseNode(int precedence)
 {
 
 	Token token = consume();
@@ -62,7 +63,7 @@ Node* Parser::parseNode(int precedence)
     if (prefix == prefixParslets.end()) 
     	throw std::runtime_error("Could not parse \"" + token.text + "\"");
 
-    Node* left = (*prefix).second->parse(this, token);
+    NodePtr left = (*prefix).second->parse(this, token);
 
     while(precedence < getPrecedence()) {
     	token = consume();
