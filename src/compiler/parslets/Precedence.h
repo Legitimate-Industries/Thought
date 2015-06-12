@@ -14,6 +14,7 @@ struct Precedence
 	static const int POSTFIX = 8;
 	static const int METHOD = 9;
 	static const int CALL = 10;
+	static const int NAME = 11;
 };
 
 #endif // THOUGHTC_PRECEDENCE_H

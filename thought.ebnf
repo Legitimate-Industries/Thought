@@ -9,7 +9,7 @@
 *)
 (* ?[]? represent a character class. *)
 
-ident_char_b = ?[A-Za-z!?_]?;
+ident_char_b = ?[A-Za-z]?;
 digit = ?[0-9]?;
 ident_char = ident_char_b | digit;
 qual_name = identifier, {".", identifier};

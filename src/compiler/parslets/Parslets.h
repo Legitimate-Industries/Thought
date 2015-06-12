@@ -1,2 +1,6 @@
 #include "BinaryParslet.h"
 #include "LiteralParslet.h"
+#include "PrefixOpParslet.h"
+#include "GroupParslet.h"
+#include "NameParslets.h"
+#include "CallParslet.h"

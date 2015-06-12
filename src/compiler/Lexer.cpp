@@ -140,8 +140,8 @@ Token Lexer::next()
 			tok.type = Token::LINE_END;
 			lineCount++;
 			lcharCount = 0;
-			// continue;
-			return tok;
+			continue;
+			// return tok;
 		}
 
 		if(isdigit(c)) {

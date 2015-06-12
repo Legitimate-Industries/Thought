@@ -2,7 +2,6 @@
 #define THOUGHT_BINARYPARSLET_H
 
 #include "InfixParslet.h"
-#include "Precedence.h"
 
 #include "../nodes/BinaryNode.h"
 

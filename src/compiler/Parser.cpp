@@ -7,15 +7,16 @@ using namespace Thought;
 // #include "parslets/Precedence.h"
 
 Parser::Parser(Lexer& l) : lex(l) {
-	// register_parser(Token::NAME, new NameParslet());
+	register_parser(Token::NAME, new NameParslet());
 	register_parser(Token::NUMBER, new LiteralParslet());
 	register_parser(Token::FLOAT, new LiteralParslet());
 	// register_parser(Token::STRING, new LiteralParslet());
-	// register_parser(Token::LPAREN, new GroupParslet());
-	// register_parser(Token::LPAREN, new CallParslet());
+	register_parser(Token::LPAREN, new GroupParslet());
+	register_parser(Token::LPAREN, new CallParslet());
 	// // register_parser(Token::EQUAL, new AssignmentParslet());
+	register_parser(Token::DOT, new CompoundNameParslet());
 
-	// prefix(Token::DASH, Precedence::PREFIX);
+	prefix(Token::DASH, Precedence::PREFIX);
 
 	// infix(Token::EQUAL, Precedence::ASSIGNMENT, false);
 	infix(Token::DASH, Precedence::SUBTRACTION, false);
@@ -23,7 +24,7 @@ Parser::Parser(Lexer& l) : lex(l) {
 	infix(Token::FORWARDSLASH, Precedence::DIVISION, false);
 	infix(Token::ASTERISK, Precedence::MULTIPLICATION, false);
 	infix(Token::CARET, Precedence::POWER, false);
-	infix(Token::ARROW, Precedence::METHOD, false);
+	// infix(Token::ARROW, Precedence::METHOD, false);
 	// infix(Token::TILDE, Precedence::CONCATENATION, false);
 
 	// postfix(Token::PLUSPLUS, Precedence::POSTFIX);
@@ -41,7 +42,7 @@ void Parser::register_parser(Token::TokenType t, InfixParslet* i)
 
 void Parser::prefix(Token::TokenType t, int p)
 {
-	// register_parser(t, new PrefixOperatorParslet(p));
+	register_parser(t, new PrefixOpParslet(p));
 }
 
 void Parser::infix(Token::TokenType t, int p, bool r)
@@ -56,7 +57,6 @@ void Parser::postfix(Token::TokenType t, int p)
 
 NodePtr Parser::parseNode(int precedence)
 {
-
 	Token token = consume();
     auto prefix = prefixParslets.find(token.type);
 
