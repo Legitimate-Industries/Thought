@@ -47,7 +47,6 @@ struct Thought::Token
 
 		FUNCTION,
 		STRING,
-		LINE_END,
 
 		UNKNOWN,
 		EOI

@@ -36,15 +36,10 @@ int main(int argc, char* argv[]) {
 	std::cout << std::endl;
 	l.reset();
 	while(l.has_next()) {
-		// try
-		// {((-3) ^ 6) * (9 + (4 + float(7)))) / 54
-			std::cout << to_string(l.next()) << std::endl;
-		// } catch(LexerError e) {
-		// 	std::cerr << e.what() << std::endl;
-		// }
+		std::cout << to_string(l.next()) << std::endl;
 	}
 
-	// Finsh parser, then compile file into Ref<Block>
+	// VM test from here... (after the parser is finished, handthe resulting Ref<Block> to the VM)
 	Ref<Block> testBlock(new Block);
 	testBlock->push_inst_ad(OP_PUSHC, 0, 0);
 	testBlock->push_inst_ad(OP_RETURN, 0, 0);
@@ -61,10 +56,5 @@ int main(int argc, char* argv[]) {
 
 	{
 		std::cout << ref2.as_string() << std::endl;
-	}	
-	// You MUST release refs. not really
-	// The VM will forcefully delete all objects when they die, so be careful.
-	// NOT. DELETE YOUR FREAKING REFERENCES OR I WILL DO THIS, I SWEAR.
-	// NOPE, MADE YOUR LIFE EASIER. References (through ValueHandle) will Handle themselves
-	// APPRECIATE IT.
+	}
 }

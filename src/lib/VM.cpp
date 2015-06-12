@@ -181,7 +181,7 @@ void VM::run() {
 		CallFrame& frame = top();
 		if(frame.ip >= frame.code->size())
 			// Overflow, method failed to end in RETURN or END
-			throw "Too lazy to implement an actual exception yet. Deal with this for now. #1";
+			throw "MethodOverflowError: method failed to end";
 		std::uint32_t raw_inst = (*frame.code)[frame.ip];
 		std::uint8_t inst = DECODE_INST(raw_inst);
 		std::uint8_t a = DECODE_A(raw_inst);

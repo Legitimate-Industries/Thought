@@ -38,7 +38,6 @@ std::string Thought::to_string(Token::TokenType t)
 
 		TOK_CASE(FUNCTION)
 
-		TOK_CASE(LINE_END)
 		TOK_CASE(EOI)
 		default: return "UNKNOWN";
 	}
@@ -76,25 +75,14 @@ Lexer::Lexer(std::string t) : text(t), index(0), lineCount(1), lcharCount(0) {
 
 	#define ADD_KEYWORD(word, type) keywords[word] = type;
 	ADD_KEYWORD("fun", Token::FUNCTION);
-	/*ADD_KEYWORD("def", Token::KEYWORD);
-	ADD_KEYWORD("private", Token::KEYWORD);
-	ADD_KEYWORD("public", Token::KEYWORD);
-
-	ADD_KEYWORD("var", Token::VAR);
-
-	ADD_KEYWORD("class", Token::KEYWORD);
-	ADD_KEYWORD("packet", Token::KEYWORD);*/
 
 	#define ACCEPT_CHAR(chr) keyword_char.push_back(chr);
 	ACCEPT_CHAR('_');
 	ACCEPT_CHAR('!');
 	ACCEPT_CHAR('?');
-	/*ACCEPT_CHAR('$');
-	ACCEPT_CHAR('@');*/
 
 	#define ADD_SYMBOL(sym, type) symbols[sym] = type;
 	ADD_SYMBOL("->", Token::ARROW);
-	// ADD_SYMBOL("++", Token::PLUSPLUS);
 	ADD_SYMBOL("==", Token::EQUALEQUAL);
 	ADD_SYMBOL("!=", Token::NOTEQUAL);
 	ADD_SYMBOL("[[", Token::DLBRACKET);
@@ -107,7 +95,6 @@ Lexer::Lexer(std::string t) : text(t), index(0), lineCount(1), lcharCount(0) {
 	ACCEPT_CHAR_SYM('!');
 	ACCEPT_CHAR_SYM('[');
 	ACCEPT_CHAR_SYM(']');
-	// ACCEPT_CHAR_SYM('+');
 }
 
 bool Lexer::has_next() {
@@ -137,11 +124,9 @@ Token Lexer::next()
 			continue;
 
 		if(c == '\n') {
-			tok.type = Token::LINE_END;
 			lineCount++;
 			lcharCount = 0;
 			continue;
-			// return tok;
 		}
 
 		if(isdigit(c)) {
@@ -161,7 +146,6 @@ Token Lexer::next()
 					str += next();
 				}
 			}
-			// prev();
 			tok.text = str;
 			return tok;
 		} else if (isalpha(c)) {
@@ -170,7 +154,6 @@ Token Lexer::next()
 			while(isalnum(current()) || match_vector(current(), keyword_char)) {
 				str += next();
 			}
-			// prev(); // Backtrack, as we increment PAST the invalid character
 			if(keywords.find(str) != keywords.end()) {
 				tok.type = keywords.find(str)->second;
 			}
@@ -215,8 +198,6 @@ Token Lexer::next()
 				s += next();
 			}
 
-			// std::cout << s << ":" << c << std::endl;
-
 			if(symbols.find(s) != symbols.end()) {
 				tok.type = symbols.find(s)->second;
 				tok.text = s;
@@ -259,7 +240,6 @@ Token Lexer::next()
 			std::string s; s += c;
 			throw LexerError(index - 1, s, "Invalid token");
 		}
-		// c;
 	}
 
 	return Token {Token::EOI, "", index};

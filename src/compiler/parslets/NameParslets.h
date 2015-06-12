@@ -24,12 +24,10 @@ public:
 #define IS_NAME(x) dynamic_cast<NameNode*>(x.get()) || dynamic_cast<CompoundNameNode*>(x.get())
 class Thought::CompoundNameParslet : public InfixParslet {
 	NodePtr parse(Parser* parser, NodePtr left, Token tok) {
-		// if(IS_NAME(left)) {
-			auto right = parser->parseNode(getPrecedence());
-			if(IS_NAME(right)) {
-				return std::make_shared<CompoundNameNode>(left, right);
-			}
-		// }
+		auto right = parser->parseNode(getPrecedence());
+		if(IS_NAME(right)) {
+			return std::make_shared<CompoundNameNode>(left, right);
+		}
 		return NodePtr(); // Error out with a parser error!
 	}
 

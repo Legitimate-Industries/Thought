@@ -33,10 +33,6 @@ class Thought::Parser
 public:
 	Parser(Lexer&);
 
-	// AssignmentNode* parseAssignment();
-
-	// BlockNode* parseBlock();
-
 	NodePtr parseNode() { return parseNode(0); }
 	NodePtr parseNode(int);
 
