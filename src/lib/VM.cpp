@@ -137,7 +137,6 @@ void VM::popFrame() {
 }
 
 void VM::push(ValueHandle val, int index) {
-	// val->retain(); // So we are a prim example of reference counting
 	stack.insert(val, index);
 }
 
@@ -148,7 +147,6 @@ ValueHandle VM::peek(int idx) {
 ValueHandle VM::pop(int idx) {
 	ValueHandle val = stack[idx];
 	stack.remove(idx);
-	// val->release(); // We don;t want it any more, so we let it go
 	return val;
 }
 

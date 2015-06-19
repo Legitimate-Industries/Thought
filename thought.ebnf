@@ -2,30 +2,30 @@
 
 (* 
 	TODO:
-		- Add if statement, and (maybe) match statement [control flow]
+		- Add (maybe) match statement [control flow]
 		- Add while, for, foreach, and do-while loops [loops]
-		- Add ==, !=, >, <, >=, <= [comparision]
 		- Add +, -, *, /, ^ [mathematics]
 *)
 (* ?[]? represent a character class. *)
 
+(* Basic definitions *)
 ident_char_b = ?[A-Za-z]?;
 digit = ?[0-9]?;
 ident_char = ident_char_b | digit;
 qual_name = identifier, {".", identifier};
 all_char = ?All visible characters?;
-
 identifier = ident_char_b, { ident_char };
+
+(* Objects *)
 object_pair = identifier, ":", object_rhs;
 object_rhs = qual_name
            | object
            | number
            | array
-           | boolean
+           | conditional
            | function
            | string
            | function_call;
-
 number = [ '-' ], digit, {digit}, [ ("." | "e"), [ "-" ], {digit} ];
 object = [ "[", qual_name, "]" ], "{", [object_pair, {",", object_pair}], "}";
 string = '"', {all_char}, '"';
@@ -34,12 +34,39 @@ array = "[[", [object_rhs, {",", object_rhs}], "]]";
 function = "fun", "(", [identifier, {"," identifier}], ")", "{", {stat}, "}";
 function_call = qual_name, "(", [object_rhs, {",", object_rhs}], ")";
 
+(* Assignment *)
 global_assign = qual_name, "->", object_rhs;
 local_assign = qual_name, "=", object_rhs;
+
+(* Loop control *)
 return_stat = "return", object_rhs;
+break = "break";
+next = "next"; (* Going by Ruby convention instead of C++/Java *)
+
+(* Comparison *)
+neq_eq_stat = object_rhs, ("==" | "!="), object_rhs;
+lt_lteq_stat = object_rhs, ("<" | "<="), object_rhs;
+gt_gteq_stat = object_rhs, (">" | ">="), object_rhs;
+conditional = neq_eq_stat
+            | lt_lteq_stat
+            | gt_gteq_stat
+            | boolean;
+
+(* Control flow *)
+block = {stat};
+if_stat = "if", conditional, "then", block, [{"elsif", conditional, "then", block}, "else", block], "end"
+
+(* Including other files *)
+file_char = ?[A-Za-z0-9_!?.]?;
+file_identifier = file_char, { file_char };
+file_path = file_identifier, {".", file_identifier};
+import_names = "*" | identifier, {",", identifier};
+include_statement = "include", file_path, ["import", import_names];
+
+(* Main definitions *)
 stat = global_assign 
      | local_assign
      | return_stat
-     | object_rhs;
-
-root = {stat};
+     | object_rhs
+     | include_statement;
+root = block;
