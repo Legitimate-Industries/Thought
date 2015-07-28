@@ -40,7 +40,7 @@ class Thought::VM {
 	void popFrame();
 
 	ValueHandle retrieve(const CallFrame& frame, int p) { return stack[frame.bp + p]; }
-	void store(const CallFrame& frame, int p, ValueHandle val) { stack.insert(val, frame.bp + p); }
+	void store(const CallFrame& frame, int p, ValueHandle val) { stack.emplace(val, frame.bp + p); }
 
 	friend class Value;
 	void markAll();

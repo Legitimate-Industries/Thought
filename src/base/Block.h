@@ -19,6 +19,7 @@ namespace Thought {
 		OP_RETURN = 0x2, // Returns from the method currently running
 
 		OP_PUSHC = 0x3, // Pushs a block constant to the stack a-register number d-constant number
+		OP_PUSHF = 0x4, // Push a float object to the stack a-register d-number (figure how to support num > ffff)
 	};
 };
 

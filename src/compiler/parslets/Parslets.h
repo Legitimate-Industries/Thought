@@ -4,3 +4,4 @@
 #include "GroupParslet.h"
 #include "NameParslets.h"
 #include "CallParslet.h"
+#include "AssignmentParslet.h"

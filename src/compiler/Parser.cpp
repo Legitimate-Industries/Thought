@@ -13,6 +13,8 @@ Parser::Parser(Lexer& l) : lex(l) {
 	register_parser(Token::LPAREN, new GroupParslet());
 	register_parser(Token::LPAREN, new CallParslet());
 	register_parser(Token::DOT, new CompoundNameParslet());
+	register_parser(Token::EQUAL, new AssignmentParslet());
+	register_parser(Token::ARROW, new AssignmentParslet());
 
 	prefix(Token::DASH, Precedence::PREFIX);
 

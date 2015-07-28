@@ -93,6 +93,20 @@ public:
 		mArray[index] = val;
 	}
 
+	void emplace(const T& val, int index) {
+		if(index >= mNext) ++mNext; // increase our array's size by one
+		if(index < 0) index = mNext + index;
+		ensureSize(mNext);
+
+		ASSERT_RANGE(index, mNext);
+		// mArray[mNext++] = val;
+		/*for(int i = mNext - 1; i > index; i--) {
+			mArray[i] = mArray[i - 1];
+		}*/
+
+		mArray[index] = val;
+	}
+
 	void remove(int index) {
 		if(index < 0) index = mNext + index;
 		ASSERT_RANGE(index, mNext);

@@ -2,6 +2,9 @@
 #include "Lexer.h"
 #include "Parser.h"
 #include <lib/VM.h>
+#include <compiler/Compiler.h>
+
+#include <compiler/nodes/AssignmentNode.h>
 
 #include <tclap/CmdLine.h>
 #include <fstream>
@@ -29,32 +32,39 @@ int main(int argc, char* argv[]) {
 	}
 	file.close();
 
+	// Lexer l(text);
+	// Parser parser(l);
+	// auto node = parser.parseNode();
+	// node->print(std::cout);
+	// std::cout << std::endl;
+	// l.reset();
+	// while(l.has_next()) {
+	// 	std::cout << to_string(l.next()) << std::endl;
+	// }
+
+	// // VM test from here... (after the parser is finished, handthe resulting Ref<Block> to the VM)
+	// Ref<Block> testBlock(new Block);
+	// testBlock->push_inst_ad(OP_PUSHC, 0, 0);
+	// testBlock->push_inst_ad(OP_RETURN, 0, 0);
+
+	// VM vm;
+	// auto ref1 = vm.createDouble(3);
+
 	Lexer l(text);
 	Parser parser(l);
-	auto node = parser.parseNode();
-	node->print(std::cout);
-	std::cout << std::endl;
-	l.reset();
-	while(l.has_next()) {
-		std::cout << to_string(l.next()) << std::endl;
-	}
-
-	// VM test from here... (after the parser is finished, handthe resulting Ref<Block> to the VM)
-	Ref<Block> testBlock(new Block);
-	testBlock->push_inst_ad(OP_PUSHC, 0, 0);
-	testBlock->push_inst_ad(OP_RETURN, 0, 0);
-
+	Compiler compiler;
 	VM vm;
-	auto ref1 = vm.createDouble(3);
-	ValueHandle ref2;
-	{
-		ref2 = vm.createString(std::string("Maine").c_str());
-		testBlock->add_constant(ref2);
+	while(l.has_next()) {
+		auto node = parser.parseNode();
+		if(dynamic_cast<AssignmentNode*>(node.get())) {
+			compiler.compileAssignment(node);
+		}
 	}
-	vm.callBlock(testBlock, 0);
-	vm.dump();
+	compiler.end();
+	vm.callBlock(compiler.getBlock(), 0);
 
-	{
-		std::cout << ref2.as_string() << std::endl;
-	}
+	ValueHandle vh = vm.peek(0);
+	std::cout << vh.as_double() << std::endl;
+
+	vm.dump();
 }
