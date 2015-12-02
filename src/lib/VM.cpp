@@ -162,11 +162,13 @@ void VM::dump() {
 	// Dump value stack
 	for(int i = 0; i < stack.size(); i++) {
 		std::cout << "Location " << i << ": ";
-		#define VCASE(x) case Value::x: std::cout << #x << std::endl; break;
+		#define VCASE(x, y) case Value::x: std::cout << #x; y; std::cout << std::endl; break;
 		switch(stack[i].val->type) {
-			VCASE(DOUBLE)
-			VCASE(BOOL)
-			VCASE(STRING)
+			VCASE(DOUBLE, {
+				std::cout << " (" << stack[i].as_double() << ")";
+			})
+			VCASE(BOOL, {})
+			VCASE(STRING, {})
 		}
 		#undef VCASE
 	}
@@ -190,6 +192,12 @@ void VM::run() {
 			case OP_PUSHC: {
 				ValueHandle cons = frame.code->get_constant(d);
 				store(frame, a, cons);
+				break;
+			}
+			case OP_PUSHF: {
+				ValueHandle flt = createDouble(static_cast<double>(d));
+				store(frame, a, flt);
+
 				break;
 			}
 			case OP_EXIT:

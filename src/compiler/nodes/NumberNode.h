@@ -14,6 +14,8 @@ public:
 	virtual void print(std::ostream& o) const {
 		o << value;
 	}
+
+	double getValue() { return value; }
 };
 
 #endif // THOUGHT_NUMBER_NODE_H

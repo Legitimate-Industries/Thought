@@ -15,6 +15,8 @@ public:
 	void print(std::ostream& o) const {
 		o << value;
 	}
+
+	std::string getValue() { return value; }
 };
 
 #endif // THOUGHT_NAMENODE_H
